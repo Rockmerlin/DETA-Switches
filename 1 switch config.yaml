@@ -1,0 +1,94 @@
+esphome:
+  name: 1_switch
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: "**********"
+  password: "**********"
+
+# to increase the speed of conection set your switch to a static ip in your router 
+# then un hash lines 13 15 17 19 and put in you ip address
+  
+# manual_ip:
+    # Set this to the IP of the ESP
+#   static_ip: 10.0.0.xx
+    # Set this to the IP address of the router. Often ends with .1
+#   gateway: 10.0.0.1
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+#   subnet: 255.255.255.0 
+  
+  
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "1_switch Fallback"
+    password: "**********"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "**********"
+
+ota:
+  password: "**********"
+
+#########
+#       #
+#  1  L #
+#       #
+#########
+
+#################################
+
+status_led:
+  pin:
+    number: GPIO4
+    inverted: True
+
+#################################
+
+# Reset switch
+switch:
+
+  - platform: restart
+    name: 1_switch Restart
+
+#################################
+
+output:
+  # Top button
+  - platform: gpio
+    pin: GPIO13
+    id: relay1
+
+#################################
+
+light:
+  # Top button
+  - platform: binary
+    name: "Light 1"
+    output: relay1
+    id: light1
+
+
+#################################
+
+# Buttons
+binary_sensor:
+  # Top (or only) button
+  - platform: gpio
+    pin:
+      number: GPIO16
+      inverted: True
+      mode: INPUT_PULLUP
+    name: "Light 1"
+    device_class: light
+    #toggle relay on push
+    on_press:
+      - light.toggle: light1
+
+#################################

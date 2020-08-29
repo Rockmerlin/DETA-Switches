@@ -1,0 +1,141 @@
+esphome:
+  name: 3_switches
+  platform: ESP8266
+  board: esp01_1m
+
+wifi:
+  ssid: "**********"
+  password: "**********"
+
+# to increase the speed of conection set your switch to a static ip in your router 
+# then un hash lines 13 15 17 19 and put in you ip address
+  
+# manual_ip:
+    # Set this to the IP of the ESP
+#   static_ip: 10.0.0.xx
+    # Set this to the IP address of the router. Often ends with .1
+#   gateway: 10.0.0.1
+    # The subnet of the network. 255.255.255.0 works for most home networks.
+#   subnet: 255.255.255.0 
+
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "3_switches fallback"
+    password: "**********"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: "**********"
+
+ota:
+  password: ""**********"
+
+#########
+#  1    #
+#  2  L #
+#  3    #
+#########
+
+#################################
+
+status_led:
+  pin:
+    number: GPIO0
+    inverted: True
+
+#################################
+
+# Reset switch
+switch:
+
+  - platform: restart
+    name: 3 Switch Restart
+
+#################################
+
+output:
+# Postion 1
+  - platform: gpio
+    pin: GPIO5
+    id: relay1
+
+# Position 2
+  - platform: gpio
+    pin: GPIO14
+    id: relay2
+
+# Position 3
+  - platform: gpio
+    pin: GPIO12
+    id: relay3
+
+#################################
+
+light:
+# Postion 1
+  - platform: binary
+    name: "Light 1"
+    output: relay1
+    id: light1
+
+# Postion 2
+  - platform: binary
+    name: "Light 2"
+    output: relay2
+    id: light2
+
+# Postion 3
+  - platform: binary
+    name: "Light 3"
+    output: relay3
+    id: light3
+
+#################################
+
+# Buttons
+binary_sensor:
+# position 1
+  - platform: gpio
+    pin:
+      number: GPIO16
+      inverted: True
+    name: "Light 1"
+    device_class: light
+    #toggle relay on press
+    on_press:
+      - light.toggle: light1
+
+# position 2
+  - platform: gpio
+    pin:
+      number: GPIO04
+      inverted: True
+    name: "Light 2"
+    device_class: light
+    #toggle relay on press
+    on_press:
+      - light.toggle: light2
+     
+
+# Position 3
+  - platform: gpio
+    pin:
+      number: GPIO03
+      inverted: True
+    name: "Light 3"
+    device_class: light
+    #toggle relay on press
+    on_press:
+      - light.toggle: light3
+    
+#################################
+
+
+
+
